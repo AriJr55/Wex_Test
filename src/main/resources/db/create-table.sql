@@ -4,6 +4,7 @@
 --comment: create-transactions-tables
 create table transactions (
     id integer primary key autoincrement not null,
+    purchase_key UUID not null,
     description varchar(50) not null,
     transaction_date DATETIME not null,
     purchase_amount DOUBLE(2)

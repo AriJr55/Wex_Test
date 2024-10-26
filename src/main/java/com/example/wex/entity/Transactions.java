@@ -1,17 +1,23 @@
 package com.example.wex.entity;
 
+import com.fasterxml.uuid.UUIDGenerator;
 import jakarta.persistence.*;
+import org.springframework.context.annotation.Primary;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Table(name="transactions")
 public class Transactions {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
+
+    @Column(name = "purchase_key", nullable = false)
+    private UUID purchaseKey;
 
     @Column(name = "description", nullable = false)
     private String description;
@@ -65,10 +71,22 @@ public class Transactions {
         this.destinyKey = destinyKey;
     }
 
+    public UUID getPurchaseKey() {
+        return purchaseKey;
+    }
+
+    public void setPurchaseKey(UUID purchaseKey) {
+        this.purchaseKey = purchaseKey;
+    }
+
     @PrePersist
     void prePersist() {
         if (this.transactionDate == null) {
             this.transactionDate = LocalDateTime.now();
+        }
+
+        if (this.purchaseKey == null) {
+            this.purchaseKey = UUID.randomUUID();
         }
     }
 
