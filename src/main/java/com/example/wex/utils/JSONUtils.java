@@ -1,6 +1,7 @@
 package com.example.wex.utils;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -9,7 +10,11 @@ import org.apache.commons.beanutils.PropertyUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
@@ -17,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
-public class JSONUtils {
+public final class JSONUtils {
 
     public static final TypeReference<Map<String, Object>> mapReference = new TypeReference<>() {};
     public static final TypeReference<Map<String, String>> mapStringReference = new TypeReference<>() {};
@@ -116,5 +121,84 @@ public class JSONUtils {
             }
         }
         return lastOne;
+    }
+
+    public static <T> T jsonToObject(final String json, final Class<T> clazz) {
+        if (json.trim().length() < 1) {
+            return null;
+        }
+        T t = null;
+        try {
+            t = mapper.readValue(json, clazz);
+        } catch (final Exception e) {
+            logger.warn(e.getMessage(), e);
+        }
+        return t;
+    }
+
+    public static String objectToJson(final Object obj) {
+        try {
+            return mapper.writeValueAsString(obj);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void objectToJson(final Object obj, final OutputStream outputStream) {
+        try {
+            mapper.writeValue(outputStream, obj);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static <T> T jsonToObject(final String json, final TypeReference<T> type) {
+        T t = null;
+        try {
+            t = mapper.readValue(json, type);
+        } catch (final Exception e) {
+            throw new RuntimeException(e);
+        }
+        return t;
+    }
+
+    public static <T> T jsonToObject(final URL json, final Class<T> clazz) {
+        T t = null;
+        try {
+            t = mapper.readValue(json, clazz);
+        } catch (final Exception e) {
+            throw new RuntimeException(e);
+        }
+        return t;
+    }
+
+    public static <T> T jsonToObject(final URL json, final TypeReference<T> type) {
+        T t = null;
+        try {
+            t = mapper.readValue(json, type);
+        } catch (final Exception e) {
+            throw new RuntimeException(e);
+        }
+        return t;
+    }
+
+    public static <T> T jsonToObject(final File json, final Class<T> clazz) {
+        T t = null;
+        try {
+            t = mapper.readValue(json, clazz);
+        } catch (final Exception e) {
+            throw new RuntimeException(e);
+        }
+        return t;
+    }
+
+    public static <T> T jsonToObject(final File json, final TypeReference<T> type) {
+        T t = null;
+        try {
+            t = mapper.readValue(json, type);
+        } catch (final Exception e) {
+            throw new RuntimeException(e);
+        }
+        return t;
     }
 }
