@@ -10,4 +10,10 @@ create table transactions (
 );
 --rollback DROP TABLE transactions;
 
+--changeset Ari.Junior:2 labels:alter-transactions-table context:create-collumn-destinyKey
+--comment: create-collumn-destinyKey
+alter table transactions
+ADD destiny_key integer;
+
+--rollback DROP TABLE transactions;
 
