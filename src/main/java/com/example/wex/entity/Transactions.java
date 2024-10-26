@@ -22,6 +22,9 @@ public class Transactions {
     @Column(name = "transaction_date", nullable = false)
     private LocalDateTime transactionDate;
 
+    @Column(name = "destiny_key", nullable = false)
+    private Long destinyKey;
+
     public Long getId() {
         return id;
     }
@@ -52,6 +55,14 @@ public class Transactions {
 
     public void setTransactionDate(LocalDateTime transactionDate) {
         this.transactionDate = transactionDate;
+    }
+
+    public Long getDestinyKey() {
+        return destinyKey;
+    }
+
+    public void setDestinyKey(Long destinyKey) {
+        this.destinyKey = destinyKey;
     }
 
     @PrePersist
