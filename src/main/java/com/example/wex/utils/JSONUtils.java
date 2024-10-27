@@ -201,4 +201,26 @@ public final class JSONUtils {
         }
         return t;
     }
+
+    @SuppressWarnings({"unchecked"})
+    public static Map<String, Object> asMap(Object object) {
+        if (object instanceof Map) {
+            return (Map<String, Object>) object;
+        } else {
+            return mapper.convertValue(object, Map.class);
+        }
+    }
+
+    @SuppressWarnings({"unchecked"})
+    public static List<Map<String, Object>> asList(Object object) {
+        return (List<Map<String, Object>>) object;
+    }
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    public static List<Map<String, Object>> getList(Map map, String key) {
+        if (map == null) {
+            return null;
+        }
+        return (List<Map<String, Object>>) map.get(key);
+    }
 }

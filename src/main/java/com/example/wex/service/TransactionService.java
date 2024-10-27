@@ -17,7 +17,7 @@ public class TransactionService {
         Long destinyKey  = JSONUtils.readLong(inputInfo, "DestinyKey");
 
         if(description.length() > 50) {
-            throw new BusinessException("Descript must must not exceed 50 characters!");
+            throw new BusinessException("Description must must not exceed 50 characters!");
         }
 
         Transactions transaction = new Transactions();
