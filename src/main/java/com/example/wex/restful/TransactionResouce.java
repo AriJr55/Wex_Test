@@ -5,6 +5,7 @@ import com.example.wex.exceptions.BusinessException;
 import com.example.wex.repository.TransactionRepository;
 import com.example.wex.service.CurrencyService;
 import com.example.wex.service.TransactionService;
+import com.example.wex.utils.JSONUtils;
 import com.example.wex.vo.TransactionVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -56,13 +57,22 @@ public class TransactionResouce {
     }
 
     @PostMapping("/save")
-    public ResponseEntity<TransactionVO> save (@RequestBody Map<String,Object> inputInfo) throws BusinessException {
-        return ResponseEntity.ok(new TransactionVO(transactionRepository.save(transactionService.createEntity(inputInfo))));
+    public ResponseEntity<Object> save (@RequestBody Map<String,Object> inputInfo) {
+        TransactionVO vo;
+        try {
+           vo  = new TransactionVO(transactionRepository.save(transactionService.createEntity(inputInfo)));
+        } catch (Exception e) {
+            return new ResponseEntity<>(Map.of("Message", e.getMessage()), HttpStatus.UNPROCESSABLE_ENTITY);
+        }
+        return new ResponseEntity<>(vo, HttpStatus.OK);
     }
 
     @PutMapping("/update")
     public ResponseEntity<TransactionVO> update (@RequestBody Map<String,Object> inputInfo) {
         UUID identifier = UUID.fromString((String) inputInfo.get("purchaseKey"));
+        if(identifier == null || identifier.toString().isEmpty()){
+            return new ResponseEntity(Map.of("Message", "You should inform a key to perform this action!"), HttpStatus.UNPROCESSABLE_ENTITY);
+        }
         Transactions transaction = transactionRepository.findByPurchaseKey(identifier);
         transaction.setDestinyKey(Long.parseLong(String.valueOf(inputInfo.get("DestinyKey"))));
         transaction.setDescription((String) inputInfo.get("Description"));
