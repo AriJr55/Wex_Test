@@ -4,6 +4,7 @@ import com.example.wex.entity.Transactions;
 import com.example.wex.exceptions.BusinessException;
 import com.example.wex.exceptions.BusinessExceptionHandler;
 import com.example.wex.utils.JSONUtils;
+import com.example.wex.vo.TransactionConvertedVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,9 +16,11 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class CurrencyService {
@@ -44,7 +47,18 @@ public class CurrencyService {
 
     private RestTemplate restTemplate = new RestTemplate();
 
-    public ResponseEntity<Map> getCurrency(Transactions transaction, String country, String currency) throws BusinessException {
+    public ResponseEntity<Map> getCurrency(List<Transactions> transactionsList, String country, String currency) throws BusinessException {
+        List<TransactionConvertedVO> responseReturn = new ArrayList<>();
+        for(Transactions transaction : transactionsList) {
+            ResponseEntity<Map> currencyData = this.getCurrencyData(transaction, country, currency);
+            Map aux = JSONUtils.jsonToObject(String.valueOf(currencyData.getBody()), Map.class);
+            List<Map<String,Object>>data = (List) aux.get("data");
+            responseReturn.add((new TransactionConvertedVO(transaction, data.get(0))));
+        }
+        return new ResponseEntity(responseReturn, HttpStatus.OK);
+    }
+
+    private ResponseEntity<Map> getCurrencyData(Transactions transaction, String country, String currency) throws BusinessException {
         LocalDate dateBegin = LocalDate.from(transaction.getTransactionDate().truncatedTo(ChronoUnit.DAYS));
         LocalDate dateEnd = dateBegin.minusMonths(range);
         String filter = timePeriodBegin + dateBegin + "," + timePeriodEnd + dateEnd

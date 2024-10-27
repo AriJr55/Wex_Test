@@ -48,8 +48,8 @@ public class TransactionResouce {
     @GetMapping("/findByDestinyKeyWithCurrency")
     public ResponseEntity<Map> findByDestinyKeyWithCurrency (@RequestParam(name = "destinyKey") Long destinyKey,
                                                              @RequestParam(name = "country") String country, @RequestParam(name = "currency") String currency) throws BusinessException {
-        List<Transactions> transactionsList=transactionRepository.findByDestinyKeyOrderByTransactionDateDesc(destinyKey,PageRequest.of(0,10));
-        return currencyService.getCurrency(transactionsList.get(0), country, currency);
+        List<Transactions> transactionsList = transactionRepository.findByDestinyKeyOrderByTransactionDateDesc(destinyKey,PageRequest.of(0,10));
+        return currencyService.getCurrency(transactionsList, country, currency);
 
     }
 
