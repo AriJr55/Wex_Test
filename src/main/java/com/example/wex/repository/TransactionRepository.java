@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 @Component
 public interface TransactionRepository extends JpaRepository<Transactions, Long> {
@@ -14,4 +15,7 @@ public interface TransactionRepository extends JpaRepository<Transactions, Long>
     List<Transactions> findByTransactionDateBetweenOrderByIdDesc(LocalDate initDate, LocalDate endDate);
 
     List<Transactions> findByDestinyKeyOrderByTransactionDateDesc(Long destinyKey, PageRequest page);
+
+    Transactions findByPurchaseKey(UUID purchaseKey);
+
 }

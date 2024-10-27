@@ -9,12 +9,14 @@ import com.example.wex.vo.TransactionVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/v1/transactions")
@@ -57,4 +59,24 @@ public class TransactionResouce {
     public ResponseEntity<TransactionVO> save (@RequestBody Map<String,Object> inputInfo) throws BusinessException {
         return ResponseEntity.ok(new TransactionVO(transactionRepository.save(transactionService.createEntity(inputInfo))));
     }
+
+    @PutMapping("/update")
+    public ResponseEntity<TransactionVO> update (@RequestBody Map<String,Object> inputInfo) {
+        UUID identifier = UUID.fromString((String) inputInfo.get("purchaseKey"));
+        Transactions transaction = transactionRepository.findByPurchaseKey(identifier);
+        transaction.setDestinyKey(Long.parseLong(String.valueOf(inputInfo.get("DestinyKey"))));
+        transaction.setDescription((String) inputInfo.get("Description"));
+        transaction.setPurchaseAmount(Double.parseDouble(String.valueOf(inputInfo.get("PurchaseAmount"))));
+
+        return ResponseEntity.ok(new TransactionVO(transactionRepository.save(transaction)));
+    }
+
+    @DeleteMapping("/delete")
+    public ResponseEntity<Map> delete (@RequestParam(name = "key") String key) {
+        UUID identifier = UUID.fromString((String) key);
+
+        transactionRepository.delete(transactionRepository.findByPurchaseKey(identifier));
+        return new ResponseEntity<Map>(null, HttpStatus.NO_CONTENT);
+    }
+
 }
