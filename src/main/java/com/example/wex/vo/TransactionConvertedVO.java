@@ -1,8 +1,6 @@
 package com.example.wex.vo;
 
 import com.example.wex.entity.Transactions;
-import com.example.wex.utils.JSONUtils;
-import org.springframework.http.ResponseEntity;
 
 import java.util.Map;
 
@@ -20,8 +18,8 @@ public class TransactionConvertedVO extends TransactionVO {
     public TransactionConvertedVO(Transactions transaction, Map<String,Object> currencyData) {
         super(transaction);
         this.exchangeRate = (String) currencyData.get("exchange_rate");
-        Double value = (double) Math.round(Double.parseDouble((String) currencyData.get("exchange_rate")) * 100) / 100;
-        this.convertedAmount = String.valueOf(value);
+        Double value = Double.parseDouble((String) currencyData.get("exchange_rate")) * transaction.getPurchaseAmount();
+        this.convertedAmount = String.valueOf((double) Math.round(value * 100 / 100 ));
         this.countryCurrencyDesc = (String) currencyData.get("country_currency_desc");
     }
 
