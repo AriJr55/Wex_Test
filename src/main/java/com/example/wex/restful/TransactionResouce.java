@@ -3,6 +3,7 @@ package com.example.wex.restful;
 import com.example.wex.entity.Transactions;
 import com.example.wex.exceptions.BusinessException;
 import com.example.wex.repository.TransactionRepository;
+import com.example.wex.service.CurrencyService;
 import com.example.wex.service.TransactionService;
 import com.example.wex.vo.TransactionVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,22 +24,33 @@ public class TransactionResouce {
     private TransactionService transactionService;
 
     @Autowired
+    private CurrencyService currencyService;
+
+    @Autowired
     private TransactionRepository transactionRepository;
 
-    @RequestMapping("/")
+    @GetMapping("/")
     public Page<Transactions> query (@RequestParam(name = "page", defaultValue = "0", required = false) int page) {
         return transactionRepository.findAll(PageRequest.of(page, 10));
     }
 
-    @RequestMapping("/findByDestinyKey")
+    @GetMapping("/findByDestinyKey")
     public List<TransactionVO> findByDestinyKey (@RequestParam(name = "destinyKey") Long destinyKey,
                                                  @RequestParam(name = "page", defaultValue = "0", required = false) int page) {
-        List<Transactions> transactionsList = transactionRepository.findByDestinyKeyOrderByTransactionDateDesc(destinyKey, PageRequest.of(page, 10));
+        List<Transactions> transactionsList = transactionRepository.findByDestinyKeyOrderByTransactionDateDesc(destinyKey, PageRequest.of(page, 1));
         List<TransactionVO> transactionsVoList = new ArrayList<>();
         for(Transactions vo : transactionsList) {
             transactionsVoList.add(new TransactionVO(vo));
         }
         return transactionsVoList;
+    }
+
+    @GetMapping("/findByDestinyKeyWithCurrency")
+    public ResponseEntity<Map> findByDestinyKeyWithCurrency (@RequestParam(name = "destinyKey") Long destinyKey,
+                                                             @RequestParam(name = "country") String country, @RequestParam(name = "currency") String currency) throws BusinessException {
+        List<Transactions> transactionsList=transactionRepository.findByDestinyKeyOrderByTransactionDateDesc(destinyKey,PageRequest.of(0,10));
+        return currencyService.getCurrency(transactionsList.get(0), country, currency);
+
     }
 
     @PostMapping("/save")
