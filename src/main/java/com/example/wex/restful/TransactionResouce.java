@@ -2,6 +2,7 @@ package com.example.wex.restful;
 
 import com.example.wex.entity.Transactions;
 import com.example.wex.exceptions.BusinessException;
+import com.example.wex.exceptions.BusinessExceptionHandler;
 import com.example.wex.repository.TransactionRepository;
 import com.example.wex.service.CurrencyService;
 import com.example.wex.service.TransactionService;
@@ -69,12 +70,18 @@ public class TransactionResouce {
 
     @PutMapping("/update")
     public ResponseEntity<TransactionVO> update (@RequestBody Map<String,Object> inputInfo) {
-        UUID identifier = UUID.fromString((String) inputInfo.get("purchaseKey"));
-        if(identifier == null || identifier.toString().isEmpty()){
-            return new ResponseEntity(Map.of("Message", "You should inform a key to perform this action!"), HttpStatus.UNPROCESSABLE_ENTITY);
+        if((String) inputInfo.get("purchaseKey") == null || ((String) inputInfo.get("purchaseKey")).isEmpty()) {
+            return new ResponseEntity(Map.of("Message", "You should inform a key to perform this action!"), HttpStatus.BAD_REQUEST);
         }
+        UUID identifier = UUID.fromString((String) inputInfo.get("purchaseKey"));
+
         Transactions transaction = transactionRepository.findByPurchaseKey(identifier);
-        transaction.setDestinyKey(Long.parseLong(String.valueOf(inputInfo.get("DestinyKey"))));
+        if(transaction == null ) {
+            return new ResponseEntity(Map.of("Message", "No transaction found with this key: " + identifier ), HttpStatus.BAD_REQUEST);
+        }
+        if(inputInfo.get("DestinyKey") != null) {
+            return new ResponseEntity(Map.of("Message", "Destiny Key is not allowed to be changed!"), HttpStatus.BAD_REQUEST);
+        }
         transaction.setDescription((String) inputInfo.get("Description"));
         transaction.setPurchaseAmount(Double.parseDouble(String.valueOf(inputInfo.get("PurchaseAmount"))));
 
