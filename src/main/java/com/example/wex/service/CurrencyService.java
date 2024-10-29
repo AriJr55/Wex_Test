@@ -52,7 +52,7 @@ public class CurrencyService {
         for(Transactions transaction : transactionsList) {
             ResponseEntity<Map> currencyData = this.getCurrencyData(transaction, country, currency);
 
-            if(currencyData.getBody().get("Status")!= null ) {
+            if(currencyData.getBody().get("Status") != null ) {
                 return currencyData;
             }
 
