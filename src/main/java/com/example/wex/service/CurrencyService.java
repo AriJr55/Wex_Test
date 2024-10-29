@@ -51,8 +51,14 @@ public class CurrencyService {
         List<TransactionConvertedVO> responseReturn = new ArrayList<>();
         for(Transactions transaction : transactionsList) {
             ResponseEntity<Map> currencyData = this.getCurrencyData(transaction, country, currency);
+
+            if(currencyData.getBody().get("Status")!= null ) {
+                return currencyData;
+            }
+
             Map aux = JSONUtils.jsonToObject(String.valueOf(currencyData.getBody()), Map.class);
-            List<Map<String,Object>>data = (List) aux.get("data");
+            List<Map<String,Object>> data = (List) aux.get("data");
+
             responseReturn.add((new TransactionConvertedVO(transaction, data.get(0))));
         }
         return new ResponseEntity(responseReturn, HttpStatus.OK);
