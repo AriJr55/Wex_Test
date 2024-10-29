@@ -1,0 +1,362 @@
+{
+	"info": {
+		"_postman_id": "5d4d40a2-0e60-49de-a5d2-c074abfa4b17",
+		"name": "W_TransactionChallange",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "10482529"
+	},
+	"item": [
+		{
+			"name": "Transactions",
+			"item": [
+				{
+					"name": "Tests",
+					"item": [
+						{
+							"name": "No currency Message",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Error 422 with message\", () => {\r",
+											"  const responseJson = pm.response.json();\r",
+											"  pm.response.to.have.status(422);\r",
+											"  pm.expect(responseJson.Message).to.eql(\"No exchange rate found for the following info!\");\r",
+											"});\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8090/v1/transactions/findByDestinyKeyWithCurrency?destinyKey=758&country=Argentina&currency=peso",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8090",
+									"path": [
+										"v1",
+										"transactions",
+										"findByDestinyKeyWithCurrency"
+									],
+									"query": [
+										{
+											"key": "destinyKey",
+											"value": "758"
+										},
+										{
+											"key": "country",
+											"value": "Argentina"
+										},
+										{
+											"key": "currency",
+											"value": "peso",
+											"description": "Invalid typing"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Exceeded chacracters",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Error 422 with message\", () => {\r",
+											"  const responseJson = pm.response.json();\r",
+											"  pm.response.to.have.status(422);\r",
+											"  pm.expect(responseJson.Message).to.eql(\"Description must must not exceed 50 characters!\");\r",
+											"});\r",
+											"\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"Description\": \"cnwuifenfn ewounfu uo  FHAPCFHqeuhfpuphquPPHUHdqdwhpuoqHUCXNUQIBDUHQEWNUPOXNDWQNCUODQBPWUDBQUObdn\",\r\n    \"DestinyKey\": 775,\r\n    \"PurchaseAmount\": \"78.56\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8090/v1/transactions/save",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8090",
+									"path": [
+										"v1",
+										"transactions",
+										"save"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Other",
+					"item": [
+						{
+							"name": "test1",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8090/",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8090",
+									"path": [
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "currency service",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v1/accounting/od/rates_of_exchange?fields=record_date,country,currency,country_currency_desc,exchange_rate&filter=record_date:lte:2024-09-30,record_date:gte:2024-03-31,currency:eq:Peso,country:eq:Argentina&sort=-record_date",
+									"protocol": "https",
+									"host": [
+										"api",
+										"fiscaldata",
+										"treasury",
+										"gov"
+									],
+									"path": [
+										"services",
+										"api",
+										"fiscal_service",
+										"v1",
+										"accounting",
+										"od",
+										"rates_of_exchange"
+									],
+									"query": [
+										{
+											"key": "fields",
+											"value": "record_date,country,currency,country_currency_desc,exchange_rate"
+										},
+										{
+											"key": "filter",
+											"value": "record_date:lte:2024-09-30,record_date:gte:2024-03-31,currency:eq:Peso,country:eq:Argentina"
+										},
+										{
+											"key": "sort",
+											"value": "-record_date"
+										},
+										{
+											"key": "filter",
+											"value": "currency:eq:Peso",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "query",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8090/v1/transactions/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8090",
+							"path": [
+								"v1",
+								"transactions",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "find by destinyKey",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8090/v1/transactions/findByDestinyKey?destinyKey=760",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8090",
+							"path": [
+								"v1",
+								"transactions",
+								"findByDestinyKey"
+							],
+							"query": [
+								{
+									"key": "destinyKey",
+									"value": "760"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "find by destinyKey with currency",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8090/v1/transactions/findByDestinyKeyWithCurrency?destinyKey=763&country=Argentina&currency=Peso",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8090",
+							"path": [
+								"v1",
+								"transactions",
+								"findByDestinyKeyWithCurrency"
+							],
+							"query": [
+								{
+									"key": "destinyKey",
+									"value": "763"
+								},
+								{
+									"key": "country",
+									"value": "Argentina"
+								},
+								{
+									"key": "currency",
+									"value": "Peso"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "save",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Description\": \"beer\",\r\n    \"PurchaseAmount\": \"12.3458\",\r\n    \"DestinyKey\": 763\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8090/v1/transactions/save",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8090",
+							"path": [
+								"v1",
+								"transactions",
+								"save"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Description\": \"Gym readjusted\",\r\n    \"PurchaseAmount\": \"35\",\r\n    \"DestinyKey\": 760,\r\n    \"purchaseKey\": \"1fe6f0bd-af9a-444a-905c-02c658c421f7\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8090/v1/transactions/update",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8090",
+							"path": [
+								"v1",
+								"transactions",
+								"update"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8090/v1/transactions/delete?key=e3119007-1cbb-4fdd-94c2-7d1a2170ca5d",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8090",
+							"path": [
+								"v1",
+								"transactions",
+								"delete"
+							],
+							"query": [
+								{
+									"key": "key",
+									"value": "e3119007-1cbb-4fdd-94c2-7d1a2170ca5d"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
