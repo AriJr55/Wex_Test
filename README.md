@@ -19,16 +19,16 @@
 
 ## Features
 - Basic CRUD for puchase transactions;
-- Especific api to converte the transaction money amount into another currency;
+- Especific api to convert the transaction money amount into another currency;
 - Database on just one file, with migrations from liquibase
 - Run with Docker.
 
 ## Setup
  - To run with docker:
-   - Just run the aproprieted run_project_withDocker file. (It will build a docker image and run this local image);
+   - Just run the appropriate run_project_withDocker file. (It will build a docker image and run this local image);
  - To run locally:
-   - Just compile the application with maven -> mvn clean install 
-The application runs on 8090 port. (even on a docker run).
+   - Just compile the application with maven -> mvn clean install.
+- The application runs on 8090 port. (even on a docker run).
 
 
 ## Usage
