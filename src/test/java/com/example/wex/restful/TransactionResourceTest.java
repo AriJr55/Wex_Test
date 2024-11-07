@@ -113,7 +113,7 @@ public class TransactionResourceTest {
 
     @Test
     void testUpdateDestinyKeyError() throws Exception {
-        List<Transactions> transaction = transactionRepository.findByDestinyKeyOrderByTransactionDateDesc(777L, PageRequest.of(0,1));
+        List<Transactions> transaction = transactionRepository.findByDestinyKeyOrderByTransactionDateDesc(775L, PageRequest.of(0,1));
         var map = new HashMap<String, Object>();
         map.put("Description", "More Food For FamilyBarbecue");
         map.put("PurchaseAmount", "78.56");
@@ -129,13 +129,12 @@ public class TransactionResourceTest {
 
     @Test
     void testDelete() throws Exception {
-        List<Transactions> transaction = transactionRepository.findByDestinyKeyOrderByTransactionDateDesc(777L, PageRequest.of(0,1));
+        List<Transactions> transaction = transactionRepository.findByDestinyKeyOrderByTransactionDateDesc(775L, PageRequest.of(0,1));
         this.mockMvc.perform(delete("/v1/transactions/delete")
                         .param("key", String.valueOf(transaction.get(0).getPurchaseKey()))
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .accept(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().is2xxSuccessful()).andReturn();
-        this.before(); //To AfterEach runs successfully!
 
     }
 
