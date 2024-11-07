@@ -113,7 +113,7 @@ public class TransactionResourceTest {
 
     @Test
     void testUpdateDestinyKeyError() throws Exception {
-        List<Transactions> transaction = transactionRepository.findByDestinyKeyOrderByTransactionDateDesc(775L, PageRequest.of(0,1));
+        List<Transactions> transaction = transactionRepository.findByDestinyKeyOrderByTransactionDateDesc(777L, PageRequest.of(0,1));
         var map = new HashMap<String, Object>();
         map.put("Description", "More Food For FamilyBarbecue");
         map.put("PurchaseAmount", "78.56");
